@@ -6,6 +6,7 @@ import { BookOpenIcon, InfoIcon, LifeBuoyIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { SignIn } from '@clerk/nextjs';
 import { useRouter } from 'next/navigation';
+import { useClerk } from '@clerk/nextjs'
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -165,7 +166,7 @@ export const Navbar02 = React.forwardRef<HTMLElement, Navbar02Props>(
       navigationLinks = defaultNavigationLinks,
       signInText = 'Sign In',
       signInHref = <SignIn/>,
-      ctaText = 'Get Started',
+      ctaText = 'sign out',
       ctaHref = '#get-started',
       onSignInClick,
       onCtaClick,
@@ -176,6 +177,7 @@ export const Navbar02 = React.forwardRef<HTMLElement, Navbar02Props>(
     const [isMobile, setIsMobile] = useState(false);
     const containerRef = useRef<HTMLElement>(null);
 const router = useRouter();
+  const { signOut } = useClerk()
 
 
     useEffect(() => {
@@ -409,21 +411,9 @@ const router = useRouter();
           {/* Right side */}
           <div className="flex items-center gap-3">
             <Button
-              variant="ghost"
-              size="sm"
-              className="text-sm font-medium hover:bg-accent hover:text-accent-foreground"
-              onClick={(e) => {
-               router.push('/sign-in');
-              }}
-            >
-              {signInText}
-            </Button>
-            <Button
               size="sm"
               className="text-sm font-medium px-4 h-9 rounded-md shadow-sm"
-              onClick={(e) => {
-                router.push('/sign-up');
-              }}
+              onClick={() => signOut({ redirectUrl: 'sign-up' })}
             >
               {ctaText}
             </Button>
