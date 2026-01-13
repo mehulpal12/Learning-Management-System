@@ -16,21 +16,19 @@ export async function POST(req: NextRequest) {
 
     if (eventType === 'user.created') {
         const user = evt.data;
-        const email =  user.email_addresses?.find(
-    (e) => e.id === user.primary_email_address_id
-  )?.email_address ?? null
+       const email = user.email_addresses[0]?.email_address;
 
-
-    await prisma.user.upsert({
-      where: { clerkId: user.id },
-      update: { 
-        email: email ?? undefined,
-       },
-      create: {
-        clerkId: user.id,
-        email: email
-      },
-    })
+// Check if email exists before creating the record
+if (email) {
+  await prisma.user.upsert({
+    where: { clerkId: user.id },
+    update: { email },
+    create: {
+      clerkId: user.id,
+      email: email,
+    },
+  });
+}
         
 
 
